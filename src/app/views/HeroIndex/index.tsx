@@ -39,11 +39,18 @@ const HEROES_QUERY = gql`
 interface IHeroIndexProps {}
 
 const HeroCardContainer = styled.div`
-	display: flex;
+	display: grid;
+	grid-template-columns: 1fr;
 	padding: 50px;
 	align-self: center;
 	max-width: 1150px;
+	@media (min-width: 1100px) {
+		grid-template-columns: 1fr 1fr;
+		margin-left: auto;
+		margin-right: auto;
+	}
 	@media (min-width: 1400px) {
+		grid-template-columns: 1fr 1fr 1fr;
 		margin-left: auto;
 		margin-right: auto;
 	}

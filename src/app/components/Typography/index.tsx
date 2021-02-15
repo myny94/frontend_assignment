@@ -27,7 +27,6 @@ export const HeadingTwo = styled.h2`
 export const HeadingThree = styled.h3`
 	font-family: "Montserrat";
   font-weight: 500;
-	color: #fff;
 	font-size: 22px;
 	line-height: 25px;
 	letter-spacing: 1.15px;
