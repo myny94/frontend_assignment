@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { ProgressBar } from "../ProgressBar";
 import { Skill } from "../Skill";
 import { HeadingTwo, HeadingThree, Paragraph } from "../Typography";
+import { ExpansionPanel } from "../ExpansionPanel";
 
 const HeroLogo = styled.img`
   width: 100%;
@@ -36,13 +37,14 @@ const AttributeLabel = styled.span`
 
 const SkillsContainer = styled.div`
   display: grid;
+  margin-bottom: 32px;
   & > * {
     margin-bottom: 16px;
   }
   & > *:last-child {
     margin-bottom: 0px;
   }
-`
+`;
 
 const HealthManaContainer = styled.div`
   display: flex;
@@ -85,8 +87,19 @@ interface IHeroCardProps {
     element: string;
     damage: number;
   }[];
-  // extend this
 }
+
+const ArrowButton = styled.button<{ direction: "down" | "up" }>`
+  border: solid black;
+  border-width: 0 9px 9px 0;
+  display: inline-block;
+  background-color: #ffffff;
+  padding: 9px;
+  outline: none;
+  cursor: pointer;
+  transform: ${(props) =>
+    props.direction === "down" ? "rotate(45deg)" : "rotate(-135deg)"};
+`;
 
 const showAttributes = [
   { label: "Agility", key: "agility", progress: true },
@@ -106,48 +119,57 @@ export const HeroCard: React.FC<IHeroCardProps> = ({
   attributes,
   skills,
 }) => {
+  const [expanded, setExpanded] = React.useState(false);
   return (
     <HeroContainer>
       <HeadingTwo>{name}</HeadingTwo>
       <HeroLogo src={imgUrl} />
       <Paragraph>{description}</Paragraph>
-      <HeadingThree>Story</HeadingThree>
-      <Paragraph>{backStory}</Paragraph>
-      <HealthManaContainer>
-        <HealthMana>
-          <HealthManaLabel>Health</HealthManaLabel>
-          <HealthManaValue>{attributes.healthpoints}</HealthManaValue>
-        </HealthMana>
-        <HealthMana>
-          <HealthManaLabel>Mana</HealthManaLabel>
-          <HealthManaValue>{attributes.mana}</HealthManaValue>
-        </HealthMana>
-      </HealthManaContainer>
 
-      <div>
-        {showAttributes.map(({ label, key, progress }) => (
-          <AttributeRow>
-            <AttributeLabel>{label}</AttributeLabel>
-            {progress ? (
-              <ProgressBar completed={attributes[key]} color="#807c7c" />
-            ) : (
-              <AttributeLabel>{attributes[key]}</AttributeLabel>
-            )}
-          </AttributeRow>
-        ))}
-      </div>
+      <ExpansionPanel expanded={expanded}>
+        <HeadingThree>Story</HeadingThree>
+        <Paragraph>{backStory}</Paragraph>
+        <HealthManaContainer>
+          <HealthMana>
+            <HealthManaLabel>Health</HealthManaLabel>
+            <HealthManaValue>{attributes.healthpoints}</HealthManaValue>
+          </HealthMana>
+          <HealthMana>
+            <HealthManaLabel>Mana</HealthManaLabel>
+            <HealthManaValue>{attributes.mana}</HealthManaValue>
+          </HealthMana>
+        </HealthManaContainer>
 
-      <HeadingThree>Skills</HeadingThree>
+        <div>
+          {showAttributes.map(({ label, key, progress }) => (
+            <AttributeRow>
+              <AttributeLabel>{label}</AttributeLabel>
+              {progress ? (
+                <ProgressBar completed={attributes[key]} color="#807c7c" />
+              ) : (
+                <AttributeLabel>{attributes[key]}</AttributeLabel>
+              )}
+            </AttributeRow>
+          ))}
+        </div>
 
-      <SkillsContainer>
-        {skills.map((skill) => (
-          <Skill
-            name={skill.name}
-            element={skill.element}
-            damage={skill.damage}
-          />
-        ))}
-      </SkillsContainer>
+        <HeadingThree>Skills</HeadingThree>
+
+        <SkillsContainer>
+          {skills.map((skill) => (
+            <Skill
+              name={skill.name}
+              element={skill.element}
+              damage={skill.damage}
+            />
+          ))}
+        </SkillsContainer>
+      </ExpansionPanel>
+
+      <ArrowButton
+        onClick={() => setExpanded(!expanded)}
+        direction={expanded ? "up" : "down"}
+      />
     </HeroContainer>
   );
 };
